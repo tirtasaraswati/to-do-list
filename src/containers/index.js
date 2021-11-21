@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Row, Col, Table, Button } from "antd";
 import { EditOutlined, PlusCircleOutlined } from "@ant-design/icons";
@@ -13,7 +13,7 @@ const { getData, handleState, clearForm } = allFunctionApp;
 export default function () {
   const dispatch = useDispatch();
   const state = useSelector((state) => state.App);
-
+  const [filteredValue, setFilteredValue] = useState(null);
   useEffect(() => {
     dispatch(getData());
     dispatch(clearForm());
@@ -86,9 +86,10 @@ export default function () {
           dataIndex: "status",
           key: "status",
           render: (data) => {
-            if (data === 1) {
-              return <div>{data}</div>;
-            }
+            let findStatus = state.statusData.find(
+              (item) => item.value == data
+            );
+            return <>{findStatus.label}</>;
           },
         },
         {
@@ -132,6 +133,12 @@ export default function () {
           title: "Status",
           dataIndex: "status",
           key: "status",
+          render: (data) => {
+            let findStatus = state.statusData.find(
+              (item) => item.value == data
+            );
+            return <>{findStatus.label}</>;
+          },
         },
         {
           title: "Created At",
@@ -177,10 +184,18 @@ export default function () {
       </Row>
       <Row>
         <Col span={12}>
-          <Table columns={columnsDone} dataSource={state.listDataDone} />
+          <Table
+            columns={columnsDone}
+            dataSource={state.listDataDone}
+            pagination={{ defaultPageSize: 20 }}
+          />
         </Col>
         <Col span={12}>
-          <Table columns={columnsNotDone} dataSource={state.listDataNotDone} />
+          <Table
+            columns={columnsNotDone}
+            dataSource={state.listDataNotDone}
+            pagination={{ defaultPageSize: 20 }}
+          />
         </Col>
       </Row>
       <Modal onSubmit={onSubmit} />
