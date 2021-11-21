@@ -6,13 +6,10 @@ import { GET } from "../../config/api";
 const BASE_URL_API =
   "https://virtserver.swaggerhub.com/hanabyan/todo/1.0.0/to-do-list";
 const { setLoader } = action;
-const getState = (state) => state.App;
 
 export function* getData() {
   try {
     yield put(setLoader(true));
-    const state = yield select(getState);
-
     let response = yield call(GET, BASE_URL_API, {});
 
     let dataDone = response.filter((item) => item.status === 1);

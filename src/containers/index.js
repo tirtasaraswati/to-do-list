@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Row, Col, Table, Button } from "antd";
 import { EditOutlined, PlusCircleOutlined } from "@ant-design/icons";
@@ -13,7 +13,6 @@ const { getData, handleState, clearForm } = allFunctionApp;
 export default function () {
   const dispatch = useDispatch();
   const state = useSelector((state) => state.App);
-  const [filteredValue, setFilteredValue] = useState(null);
   useEffect(() => {
     dispatch(getData());
     dispatch(clearForm());
@@ -100,7 +99,7 @@ export default function () {
         {
           title: "Action",
           key: "id",
-          render: (record, data) => {
+          render: (data) => {
             return (
               <>
                 <a onClick={() => editCell(data, "done")}>
@@ -148,7 +147,7 @@ export default function () {
         {
           title: "Action",
           key: "id",
-          render: (record, data) => {
+          render: (data) => {
             return (
               <>
                 <a onClick={() => editCell(data, "not")}>
