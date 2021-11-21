@@ -14,14 +14,15 @@ const initState = {
     },
     {
       label: "Not Done",
-      value: 2,
+      value: 0,
     },
   ],
   form: {
+    id: 0,
     title: "",
     description: "",
     status: "",
-    createdAt: moment().format("DD-MM-YYYY hh:mm"),
+    createdAt: moment(),
   },
 };
 
@@ -47,12 +48,19 @@ export default (state = initState, action) => {
     case types.HANDLE_STATE_DATA:
       return {
         ...state,
-        [action.main]: { ...state[action.main], [action.name]: action.value },
+        [action.main]: { ...state[action.main], [action.field]: action.value },
       };
     case types.CLEAR_DATA_DETAIL:
       return {
         ...state,
-        form: {},
+        form: {
+          ...state.form,
+          id: 0,
+          title: "",
+          description: "",
+          status: "",
+          createdAt: moment(),
+        },
       };
     default:
       return state;

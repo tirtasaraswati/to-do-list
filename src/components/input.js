@@ -28,7 +28,7 @@ const CustomInput = ({
             id={name}
             placeholder={placeholder}
             onChange={(e) => {
-              onChange(e.target.value, name, subState);
+              onChange(name, e.target.value, subState);
             }}
           />
         </Col>

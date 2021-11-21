@@ -3,11 +3,12 @@ import { useSelector, useDispatch } from "react-redux";
 import { Row, Col, Table, Button } from "antd";
 import { EditOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import Modal from "./detail";
+import moment from "moment";
 import "antd/dist/antd.css";
 import "../assets/index.scss";
 import allFunctionApp from "../redux/App/action";
 
-const { getData, handleState, handleStateData } = allFunctionApp;
+const { getData, handleState, clearForm } = allFunctionApp;
 
 export default function () {
   const dispatch = useDispatch();
@@ -15,60 +16,55 @@ export default function () {
 
   useEffect(() => {
     dispatch(getData());
+    dispatch(clearForm());
   }, [dispatch]);
 
   const editCell = (data, type) => {
-    dispatch(handleStateData("form", data));
+    dispatch(handleState("form", data));
     dispatch(handleState("isModalVisible", true));
   };
 
-  // const handleOk = (e, name, title) => {
-  //   let typeData = name === "tableOperation" ? "opt" : "mat";
-  //   let newData;
-  //   let editData;
-  //   if (modalOptMat[typeData].id !== 0) {
-  //     editData = stateEstimasi[name].map((item) =>
-  //       item.id !== modalOptMat[typeData].id ? item : modalOptMat[typeData]
-  //     );
-  //     dispatch(onChange(editData, name));
-  //   } else if (typeData === "opt") {
-  //     newData = {
-  //       id: 0,
-  //       operationId: modalOptMat[typeData].operationId,
-  //       operationDescription: modalOptMat[typeData].operationDescription,
-  //       retailPrice: modalOptMat[typeData].retailPrice,
-  //       discount:
-  //         modalOptMat[typeData].discount === ""
-  //           ? 0
-  //           : modalOptMat[typeData].discount,
-  //       nettPriceIncTax: modalOptMat[typeData].nettPriceIncTax,
-  //       nettPriceExcTax: modalOptMat[typeData].nettPriceExcTax,
-  //       status: modalOptMat[typeData].status,
-  //       rejectionReason: modalOptMat[typeData].rejectionReason,
-  //     };
-  //     dispatch(onChange([...stateEstimasi[name], newData], name));
-  //   } else {
-  //     newData = {
-  //       id: 0,
-  //       materialNo: modalOptMat[typeData].materialNo,
-  //       materialDescription: modalOptMat[typeData].materialDescription,
-  //       materialType: modalOptMat[typeData].materialType,
-  //       qty: modalOptMat[typeData].qty === "" ? 1 : modalOptMat[typeData].qty,
-  //       retailPrice: modalOptMat[typeData].retailPrice,
-  //       discount:
-  //         modalOptMat[typeData].discount === ""
-  //           ? 0
-  //           : modalOptMat[typeData].discount,
-  //       nettPriceIncTax: modalOptMat[typeData].nettPriceIncTax,
-  //       nettPriceExcTax: modalOptMat[typeData].nettPriceExcTax,
-  //       status: modalOptMat[typeData].status,
-  //       rejectionReason: modalOptMat[typeData].rejectionReason,
-  //     };
-  //     dispatch(onChange([...stateEstimasi[name], newData], name));
-  //   }
-  //   dispatch(onChangeModal(!modalOptMat.isModalVisible, "isModalVisible"));
-  //   dispatch(clearModal());
-  // };
+  const onSubmit = (e, data) => {
+    let newData;
+    let editData;
+    if (data.id !== 0) {
+      if (data.status == 1) {
+        editData = state.listDataDone.map((item) =>
+          item.id !== state.form.id ? item : state.form
+        );
+        dispatch(handleState("listDataDone", editData));
+      } else {
+        editData = state.listDataNotDone.map((item) =>
+          item.id !== state.form.id ? item : state.form
+        );
+        dispatch(handleState("listDataNotDone", editData));
+      }
+    } else if (data.id == 0) {
+      if (data.status == 1) {
+        newData = {
+          id: state.listDataDone.length + state.listDataNotDone.length + 1,
+          title: state.form.title,
+          description: state.form.description,
+          status: state.form.status,
+          createdAt: moment(state.form.createdAt).format("YYYY-MM-DD HH:mm"),
+        };
+        dispatch(handleState("listDataDone", [...state.listDataDone, newData]));
+      } else {
+        newData = {
+          id: state.listDataDone.length + state.listDataNotDone.length + 1,
+          title: state.form.title,
+          description: state.form.description,
+          status: state.form.status,
+          createdAt: moment(state.form.createdAt).format("YYYY-MM-DD HH:mm"),
+        };
+        dispatch(
+          handleState("listDataNotDone", [...state.listDataNotDone, newData])
+        );
+      }
+    }
+    dispatch(handleState("isModalVisible", !state.isModalVisible));
+    dispatch(clearForm());
+  };
 
   const columnsDone = [
     {
@@ -173,7 +169,7 @@ export default function () {
             size="large"
             shape="round"
             icon={<PlusCircleOutlined />}
-            // onClick={(e) => handleOk(e, table, title)}
+            onClick={() => dispatch(handleState("isModalVisible", true))}
           >
             Add To Do List
           </Button>
@@ -187,7 +183,7 @@ export default function () {
           <Table columns={columnsNotDone} dataSource={state.listDataNotDone} />
         </Col>
       </Row>
-      <Modal />
+      <Modal onSubmit={onSubmit} />
     </div>
   );
 }

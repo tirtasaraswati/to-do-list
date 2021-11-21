@@ -35,7 +35,7 @@ const CustomSelect = ({
             value={initialValue}
             onSearch={onSearch}
             onChange={(e) => {
-              onChange(e, name, subState);
+              onChange(name, e, subState);
             }}
           >
             {options.map((list) => (

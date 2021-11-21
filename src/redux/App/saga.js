@@ -12,10 +12,10 @@ export function* getData() {
   try {
     yield put(setLoader(true));
     const state = yield select(getState);
-
+    
     let response = yield call(GET, BASE_URL_API, {});
-    let dataDone = response.filter((item) => item.status == 1);
-    let dataNotDone = response.filter((item) => item.status == 0);
+    let dataDone = response.filter((item) => item.status === 1);
+    let dataNotDone = response.filter((item) => item.status === 0);
     yield put({
       type: types.GET_DATA_SUCCESS,
       payload: response,

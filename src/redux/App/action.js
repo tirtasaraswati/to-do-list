@@ -23,7 +23,7 @@ export const handleState = (field, value) => {
 
 export const handleStateData = (field, value, main) => {
   return {
-    type: types.HANDLE_STATE,
+    type: types.HANDLE_STATE_DATA,
     field,
     value,
     main,

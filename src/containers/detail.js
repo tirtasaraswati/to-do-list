@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Row, Col, Modal, Button } from "antd";
 import Input from "../components/input";
@@ -10,18 +10,42 @@ import allFunctionApp from "../redux/App/action";
 
 const { handleState, handleStateData, clearForm } = allFunctionApp;
 
-export default function () {
+export default function ({ onSubmit }) {
   const dispatch = useDispatch();
   const state = useSelector((state) => state.App);
+  const [isDisabled, setDisabled] = useState(false);
+
+  useEffect(() => {
+    if (state.form.status == 1) {
+      setDisabled(true);
+    } else {
+      setDisabled(false);
+    }
+  }, [state.form]);
 
   const closePopUp = () => {
-    dispatch(clearForm());
     dispatch(handleState("isModalVisible", false));
+    dispatch(clearForm());
+  };
+
+  const onDelete = (data) => {
+    let filterData;
+    if (data.status == 1) {
+      filterData = state.listDataDone.filter((value) => value.id !== data.id);
+      dispatch(handleState("listDataDone", filterData));
+    } else {
+      filterData = state.listDataNotDone.filter(
+        (value) => value.id !== data.id
+      );
+      dispatch(handleState("listDataNotDone", filterData));
+    }
+    dispatch(handleState("isModalVisible", false));
+    dispatch(clearForm());
   };
 
   return (
     <Modal
-      title={"Update"}
+      title={"Detail List"}
       visible={state.isModalVisible}
       onCancel={closePopUp}
       footer={[
@@ -30,7 +54,7 @@ export default function () {
             <Button
               type="primary"
               size="large"
-              // onClick={(e) => handleOk(e, table, title)}
+              onClick={(e) => onSubmit(e, state.form)}
             >
               Save
             </Button>
@@ -39,7 +63,8 @@ export default function () {
             <Button
               type="default"
               size="large"
-              // onClick={() => closePopUp()}
+              disabled={isDisabled}
+              onClick={() => onDelete(state.form)}
             >
               Delete
             </Button>
@@ -55,8 +80,8 @@ export default function () {
               label="Title"
               name="title"
               value={state.form.title}
-              onChange={(val, name, subState) => {
-                dispatch(handleStateData(val, name, subState));
+              onChange={(name, val, subState) => {
+                dispatch(handleStateData(name, val, subState));
               }}
               subState="form"
             />
@@ -67,8 +92,8 @@ export default function () {
               label="Description"
               name="description"
               value={state.form.description}
-              onChange={(val, name, subState) => {
-                dispatch(handleStateData(val, name, subState));
+              onChange={(name, val, subState) => {
+                dispatch(handleStateData(name, val, subState));
               }}
               subState="form"
             />
@@ -80,8 +105,8 @@ export default function () {
               options={state.statusData}
               initialValue={state.form.status}
               value={state.form.status}
-              onChange={(val, name, subState) => {
-                dispatch(handleStateData(val, name, subState));
+              onChange={(name, val, subState) => {
+                dispatch(handleStateData(name, val, subState));
               }}
               subState="form"
             />
@@ -91,9 +116,9 @@ export default function () {
               type="text"
               label="Created At"
               name="createdAt"
-              value={moment(state.form.createdAt).format("DD-MM-YYYY hh:mm")}
-              onChange={(val, name, subState) => {
-                dispatch(handleStateData(val, name, subState));
+              value={moment(state.form.createdAt).format("YYYY-MM-DD HH:mm")}
+              onChange={(name, val, subState) => {
+                dispatch(handleStateData(name, val, subState));
               }}
               subState="form"
             />
