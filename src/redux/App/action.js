@@ -13,18 +13,20 @@ export const getData = () => {
   };
 };
 
-export const getDetail = (value) => {
-  return {
-    type: types.GET_DETAIL,
-    value,
-  };
-};
-
 export const handleState = (field, value) => {
   return {
     type: types.HANDLE_STATE,
     field,
     value,
+  };
+};
+
+export const handleStateData = (field, value, main) => {
+  return {
+    type: types.HANDLE_STATE,
+    field,
+    value,
+    main,
   };
 };
 
@@ -38,8 +40,8 @@ export const clearForm = (value) => {
 const allFunctionApp = {
   setLoader,
   getData,
-  getDetail,
   handleState,
+  handleStateData,
   clearForm,
 };
 

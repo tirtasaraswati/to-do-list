@@ -4,6 +4,5 @@ export const SET_LOADER = "SET_LOADER";
 export const GET_DATA = "GET_DATA";
 export const GET_DATA_SUCCESS = "GET_DATA_SUCCESS";
 export const HANDLE_STATE = "HANDLE_STATE";
-export const GET_DETAIL = "GET_DETAIL";
-export const GET_DETAIL_SUCCESS = "GET_DETAIL_SUCCESS";
+export const HANDLE_STATE_DATA = "HANDLE_STATE_DATA";
 export const CLEAR_DATA_DETAIL = "CLEAR_DATA_DETAIL";

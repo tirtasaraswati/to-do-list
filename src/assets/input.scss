@@ -1,0 +1,42 @@
+.Input {
+  border-radius: 8px;
+}
+
+.input-form {
+  border-radius: 8px;
+  height: 40px;
+}
+
+.label-form {
+  font-size: 15px;
+  padding: 9px 0;
+  font-weight: 500;
+}
+
+.button-dropdown {
+  &.ant-btn {
+    border-radius: 8px !important;
+    height: 40px !important;
+    margin-left: 3px !important;
+  }
+}
+
+.ant-form-item-has-error .ant-form-item-explain,
+.ant-form-item-has-error .ant-form-item-split {
+  margin-left: 34%;
+}
+
+.ant-form-item-has-success .ant-form-item-explain,
+.ant-form-item-has-success .ant-form-item-split {
+  margin-left: 34%;
+}
+
+.ant-input[disabled] {
+  color: #5e5d5d !important;
+}
+
+.form-custom {
+  // margin-bottom: 15px !important;
+  font-size: 15px;
+  font-weight: 500;
+}

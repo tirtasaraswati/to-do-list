@@ -1,62 +1,105 @@
-import React, { useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Row, Col } from "antd";
-import { ArrowLeftOutlined } from "@ant-design/icons";
-import allFunctionApp from "../redux/App/action";
+import { Row, Col, Modal, Button } from "antd";
+import Input from "../components/input";
+import Select from "../components/select";
+import moment from "moment";
 import "antd/dist/antd.css";
 import "../assets/index.scss";
+import allFunctionApp from "../redux/App/action";
 
-const { getDetail, clearForm } = allFunctionApp;
+const { handleState, handleStateData, clearForm } = allFunctionApp;
 
 export default function () {
   const dispatch = useDispatch();
   const state = useSelector((state) => state.App);
-  let history = useHistory();
 
-  useEffect(() => {
-    const data = JSON.parse(localStorage.getItem("Detail"));
-    if (data !== null) {
-      dispatch(getDetail(data));
-    }
-  }, [dispatch]);
-
-  const onCancel = () => {
+  const closePopUp = () => {
     dispatch(clearForm());
-    history.goBack();
-    localStorage.clear();
+    dispatch(handleState("isModalVisible", false));
   };
 
   return (
-    <div className="margin">
-      <div className="card">
-        <Row gutter={24}>
-          <Col span={24}>
-            <div className="title">
-              <ArrowLeftOutlined className="btn-back" onClick={onCancel} />
-              Detail Movie
-            </div>
+    <Modal
+      title={"Update"}
+      visible={state.isModalVisible}
+      onCancel={closePopUp}
+      footer={[
+        <Row>
+          <Col>
+            <Button
+              type="primary"
+              size="large"
+              // onClick={(e) => handleOk(e, table, title)}
+            >
+              Save
+            </Button>
           </Col>
-          <Col span={5} md={5} s={8}>
-            <div>
-              <img
-                className="img-detail"
-                alt={state.dataDetail.Title}
-                src={state.dataDetail.Poster}
-              />
-            </div>
+          <Col style={{ marginLeft: "10px" }}>
+            <Button
+              type="default"
+              size="large"
+              // onClick={() => closePopUp()}
+            >
+              Delete
+            </Button>
           </Col>
-          <Col span={12} md={12} s={17}>
-            <div className="text-detail">
-              <h1 style={{ borderBottom: "1px solid grey" }}>
-                {state.dataDetail.Title}
-              </h1>
-              <h2 style={{ color: "#0a58a0" }}>{state.dataDetail.Type}</h2>
-              <h2 style={{ color: "#6f6f6f" }}>{state.dataDetail.Year}</h2>
-            </div>
-          </Col>
-        </Row>
-      </div>
-    </div>
+        </Row>,
+      ]}
+    >
+      <Row>
+        <Col span={24}>
+          <div>
+            <Input
+              type="text"
+              label="Title"
+              name="title"
+              value={state.form.title}
+              onChange={(val, name, subState) => {
+                dispatch(handleStateData(val, name, subState));
+              }}
+              subState="form"
+            />
+          </div>
+          <div>
+            <Input
+              type="text"
+              label="Description"
+              name="description"
+              value={state.form.description}
+              onChange={(val, name, subState) => {
+                dispatch(handleStateData(val, name, subState));
+              }}
+              subState="form"
+            />
+          </div>
+          <div>
+            <Select
+              label="Status"
+              name="status"
+              options={state.statusData}
+              initialValue={state.form.status}
+              value={state.form.status}
+              onChange={(val, name, subState) => {
+                dispatch(handleStateData(val, name, subState));
+              }}
+              subState="form"
+            />
+          </div>
+          <div>
+            <Input
+              type="text"
+              label="Created At"
+              name="createdAt"
+              value={moment(state.form.createdAt).format("DD-MM-YYYY hh:mm")}
+              onChange={(val, name, subState) => {
+                dispatch(handleStateData(val, name, subState));
+              }}
+              subState="form"
+            />
+          </div>
+        </Col>
+      </Row>
+    </Modal>
   );
 }

@@ -1,9 +1,28 @@
 import * as types from "./../../config/actionType";
+import moment from "moment";
 
 const initState = {
   isLoading: false,
+  isModalVisible: false,
   listData: [],
-  dataDetail: {},
+  listDataDone: [],
+  listDataNotDone: [],
+  statusData: [
+    {
+      label: "Done",
+      value: 1,
+    },
+    {
+      label: "Not Done",
+      value: 2,
+    },
+  ],
+  form: {
+    title: "",
+    description: "",
+    status: "",
+    createdAt: moment().format("DD-MM-YYYY hh:mm"),
+  },
 };
 
 export default (state = initState, action) => {
@@ -17,24 +36,23 @@ export default (state = initState, action) => {
       return {
         ...state,
         listData: action.payload,
+        listDataDone: action.done,
+        listDataNotDone: action.notDone,
       };
     case types.HANDLE_STATE:
       return {
         ...state,
-        search: {
-          ...state.search,
-          [action.field]: action.value,
-        },
+        [action.field]: action.value,
       };
-    case types.GET_DETAIL_SUCCESS:
+    case types.HANDLE_STATE_DATA:
       return {
         ...state,
-        dataDetail: action.payload,
+        [action.main]: { ...state[action.main], [action.name]: action.value },
       };
     case types.CLEAR_DATA_DETAIL:
       return {
         ...state,
-        dataDetail: {},
+        form: {},
       };
     default:
       return state;

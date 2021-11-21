@@ -12,16 +12,6 @@ const publicRoutes = [
     exact: true,
     component: lazy(() => import("../src/containers/index")),
   },
-  {
-    path: PUBLIC_ROUTE.DETAIL_MOVIE,
-    exact: true,
-    component: lazy(() => import("../src/containers/detail")),
-  },
-  {
-    path: PUBLIC_ROUTE.ANAGRAM,
-    exact: true,
-    component: lazy(() => import("../src/containers/anagram")),
-  },
 ];
 
 export default function Routes() {

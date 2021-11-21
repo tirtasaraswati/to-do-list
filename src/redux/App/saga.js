@@ -14,10 +14,13 @@ export function* getData() {
     const state = yield select(getState);
 
     let response = yield call(GET, BASE_URL_API, {});
-
+    let dataDone = response.filter((item) => item.status == 1);
+    let dataNotDone = response.filter((item) => item.status == 0);
     yield put({
       type: types.GET_DATA_SUCCESS,
       payload: response,
+      done: dataDone,
+      notDone: dataNotDone,
     });
     yield put(setLoader(false));
   } catch (error) {
@@ -26,18 +29,6 @@ export function* getData() {
   }
 }
 
-export function* getDetail(action) {
-  try {
-    yield put(setLoader(true));
-  } catch (error) {
-    console.log("error : ", error);
-    yield put(setLoader(false));
-  }
-}
-
 export default function* rootSaga() {
-  yield all([
-    takeLatest(types.GET_DATA, getData),
-    takeLatest(types.GET_DETAIL, getDetail),
-  ]);
+  yield all([takeLatest(types.GET_DATA, getData)]);
 }
